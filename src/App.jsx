@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Login from './pages/Login.jsx';
-import Register from './pages/Register.jsx';
-import Products from './pages/Products.jsx';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Products from './pages/Products';
 import './App.css'
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
     <div style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '8px' }}>
       <Router>
         <nav style={{ padding: '10px', color: '#646cff' }}>
-          <Link to="/">Login</Link> | <Link to="/register">Register</Link> | {' '}
+          <Link to="/">Login</Link> | <Link to="/register">Register</Link> | {" "}
           <Link to="/products">Products</Link>
         </nav>
 

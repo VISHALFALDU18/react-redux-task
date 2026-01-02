@@ -23,11 +23,13 @@ const Products = () => {
     const [editing, setEditing] = useState(null);
 
     useEffect(() => {
+        if (token === null) return;
         if (!token) {
             navigate('/');
-            return;
         }
-        dispatch(fetchProducts());
+        else {
+            dispatch(fetchProducts());
+        }
     }, [dispatch, token, navigate]);
 
     const handleLogout = () => {
@@ -44,28 +46,29 @@ const Products = () => {
         if (editing) {
             dispatch(updateProduct({ ...formData, id: editing }));
         } else {
-            dispatch(addProduct(formData));
+            const fakeId = Math.floor(Math.random() * 900) + 101;
+            dispatch(addProduct({ id: fakeId, ...formData }));
         }
         setFormData({
             title: '',
             description: '',
-            price: '',
             category: '',
+            price: '',
             brand: '',
             rating: '',
         });
         setEditing(null);
     };
 
-    const handleEdit = (product) => {
-        setEditing(product.id);
+    const handleEdit = (p) => {
+        setEditing(p.id);
         setFormData({
-            title: product.title,
-            description: product.description,
-            price: product.price,
-            category: product.category,
-            brand: product.brand,
-            rating: product.rating,
+            title: p.title,
+            description: p.description,
+            price: p.price,
+            category: p.category,
+            brand: p.brand,
+            rating: p.rating,
         });
     };
 
@@ -82,31 +85,94 @@ const Products = () => {
         <div style={{ padding: '20px' }}>
             <h2 style={{ color: '#646cff' }}>Product List</h2>
             <button onClick={handleLogout} style={{ marginBottom: '10px' }}>Logout</button>
+
+            <form onSubmit={handleAddorUpdate} style={{ marginBottom: '20px' }}>
+                <input
+                    type="text"
+                    name="title"
+                    placeholder="Title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    required
+                    style={{ marginRight: '10px', padding: '5px' }}
+                />
+                <input
+                    type="text"
+                    name="description"
+                    placeholder="Description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    required
+                    style={{ marginRight: '10px', padding: '5px' }}
+                />
+                <input
+                    type="text"
+                    name="category"
+                    placeholder="Category"
+                    value={formData.category}
+                    onChange={handleChange}
+                    required
+                    style={{ marginRight: '10px', padding: '5px' }}
+                />
+                <input
+                    type="number"
+                    name="price"
+                    placeholder="Price"
+                    value={formData.price}
+                    onChange={handleChange}
+                    required
+                    style={{ marginRight: '10px', padding: '5px' }}
+                />
+                <input
+                    type="text"
+                    name="brand"
+                    placeholder="Brand"
+                    value={formData.brand}
+                    onChange={handleChange}
+                    required
+                    style={{ marginRight: '10px', padding: '5px' }}
+                />
+                <input
+                    type="number"
+                    step="0.1"
+                    name="rating"
+                    placeholder="Rating"
+                    value={formData.rating}
+                    onChange={handleChange}
+                    required
+                    style={{ marginRight: '10px', padding: '5px' }}
+                />
+                <button type="submit">{editing ? 'Update' : 'Add'}</button>
+            </form>
+
             <table border="1" cellPadding="10" style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
                 <thead>
-                    <tr>
-                        <th style={{ border: '1px solid #ddd', padding: '8px' }}>ID</th>
-                        <th style={{ border: '1px solid #ddd', padding: '8px' }}>Title</th>
-                        <th style={{ border: '1px solid #ddd', padding: '8px' }}>Description</th>
-                        <th style={{ border: '1px solid #ddd', padding: '8px' }}>Category</th>
-                        <th style={{ border: '1px solid #ddd', padding: '8px' }}>Price</th>
-                        <th style={{ border: '1px solid #ddd', padding: '8px' }}>Brand</th>
-                        <th style={{ border: '1px solid #ddd', padding: '8px' }}>Rating</th>
+                    <tr style={{ color: "black" }}>
+                        <th style={{ border: '1px solid #ddd', padding: '8px', color: "black" }}>ID</th>
+                        <th style={{ border: '1px solid #ddd', padding: '8px', color: "black" }}>Title</th>
+                        <th style={{ border: '1px solid #ddd', padding: '8px', color: "black" }}>Description</th>
+                        <th style={{ border: '1px solid #ddd', padding: '8px', color: "black" }}>Category</th>
+                        <th style={{ border: '1px solid #ddd', padding: '8px', color: "black" }}>Price</th>
+                        <th style={{ border: '1px solid #ddd', padding: '8px', color: "black" }}>Brand</th>
+                        <th style={{ border: '1px solid #ddd', padding: '8px', color: "black" }}>Rating</th>
+                        <th style={{ border: '1px solid #ddd', padding: '8px', color: "black" }}>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {items.map((p) => (
                         <tr key={p.id}>
-                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{p.id}</td>
-                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{p.title}</td>
-                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{p.description}</td>
-                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{p.category}</td>
-                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>${p.price}</td>
-                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{p.brand}</td>
-                            <td style={{ border: '1px solid #ddd', padding: '8px' }}>{p.rating}</td>
-                            <td>
+                            <td style={{ border: '1px solid #ddd', padding: '8px', color: "black" }}>{p.id}</td>
+                            <td style={{ border: '1px solid #ddd', padding: '8px', color: "black" }}>{p.title}</td>
+                            <td style={{ border: '1px solid #ddd', padding: '8px', color: "black" }}>{p.description}</td>
+                            <td style={{ border: '1px solid #ddd', padding: '8px', color: "black" }}>{p.category}</td>
+                            <td style={{ border: '1px solid #ddd', padding: '8px', color: "black" }}>${p.price}</td>
+                            <td style={{ border: '1px solid #ddd', padding: '8px', color: "black" }}>{p.brand}</td>
+                            <td style={{ border: '1px solid #ddd', padding: '8px', color: "black" }}>{p.rating}</td>
+                            <td style={{
+                                border: '1px solid #ddd', padding: '8px', color: "black"
+                            }}>
                                 <button onClick={() => handleEdit(p)} style={{ marginRight: '5px' }}>Edit</button>
-                                <button onClick={() => handleDelete(p.id)} style={{ color: 'red' }}>Delete</button>
+                                <button onClick={() => handleDelete(p.id)}>Delete</button>
                             </td>
                         </tr>
                     ))}

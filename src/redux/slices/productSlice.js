@@ -20,15 +20,24 @@ export const fetchProducts = createAsyncThunk(
   });
 
   export const updateProduct = createAsyncThunk('products/update', async (updatedProduct) => {
-    const res = await fetch(`https://dummyjson.com/products/${updatedProduct.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedProduct),
-    });
-    const data = await res.json();
-    return data;
+    try {
+        if (!updatedProduct.id <= 100) {
+            const res = await fetch(`https://dummyjson.com/products/${updatedProduct.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedProduct),
+            });
+            const data = await res.json();
+            return data;
+        } else {
+            return updatedProduct;
+        }
+    } catch (error) {
+        console.error('Update Failed', error);
+        return updatedProduct;
+    }
   });
 
   export const deleteProduct = createAsyncThunk('products/delete', async (id) => {
@@ -64,7 +73,9 @@ const productSlice = createSlice({
             })
             .addCase(updateProduct.fulfilled, (state, action) => {
                 const index = state.items.findIndex((p) => p.id === action.payload.id);
-                if (index !== -1) state.items[index] = action.payload;
+                if (index !== -1) {
+                    state.items[index] = {...state.items[index], ...action.payload };
+                }
             })
             .addCase(deleteProduct.fulfilled, (state, action) => {
                 state.items = state.items.filter(p => p.id !== action.payload);
