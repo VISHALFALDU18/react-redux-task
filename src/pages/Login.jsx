@@ -15,15 +15,9 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const localUser = JSON.parse(localStorage.getItem('registeredUser'));
-        if (localUser && localUser.username === username && localUser.password === password) {
-            alert('Logged in locally!');
-            navigate('/products');
-            return;
-        }
-
         const result = await dispatch(loginUser({ username, password }));
-        if (result.meta.requestStatus === 'fulfilled') {
+
+        if (loginUser.fulfilled.match(result)) {
             navigate('/products');
         }
     };
@@ -51,7 +45,7 @@ const Login = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
-                <button type="submit" disabled={loading}>Login</button>
+                <button type="submit" disabled={loading}>{loading ? 'Logging in...' : 'Login'}</button>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
             </form>
         </div>
@@ -59,3 +53,7 @@ const Login = () => {
 };
 
 export default Login;
+
+
+// username: 'emilys',
+// password: 'emilyspass',

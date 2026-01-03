@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const loginUser = createAsyncThunk(
-  'user/login', 
+  'user/login',
   async ({ username, password }, { rejectWithValue }) => {
     try {
       const response = await fetch('https://dummyjson.com/auth/login', {
@@ -13,11 +13,13 @@ export const loginUser = createAsyncThunk(
       });
 
       if (!response.ok) {
-        throw new Error('Invalid username or password');
+        const err = await response.json();
+        return rejectWithValue(err.message || 'Login failed');
       }
 
       const data = await response.json();
       localStorage.setItem('token', data.token);
+
       return data;
     } catch (err) {
       return rejectWithValue(err.message);
@@ -29,12 +31,12 @@ const userSlice = createSlice({
   name: 'user',
   initialState: {
     user: null,
-    token: null,
+    token: localStorage.getItem('token'),
     loading: false,
     error: null,
-  }, 
+  },
   reducers: {
-    loginStart: (state) => {
+    logout: (state) => {
       state.user = null;
       state.token = null;
       localStorage.removeItem('token');
@@ -56,7 +58,7 @@ const userSlice = createSlice({
         state.error = action.payload;
       });
   },
-   
+
 });
 
 export const { logout } = userSlice.actions;

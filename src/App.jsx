@@ -11,10 +11,10 @@ function App() {
   return (
     <div style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '8px' }}>
       <Router>
-        <nav style={{ padding: '10px', color: '#646cff' }}>
+        {/* <nav style={{ padding: '10px', color: '#646cff' }}>
           <Link to="/">Login</Link> | <Link to="/register">Register</Link> | {" "}
           <Link to="/products">Products</Link>
-        </nav>
+        </nav> */}
 
         <Routes>
           <Route path="/" element={<Login />} />
